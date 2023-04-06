@@ -32,11 +32,9 @@ def vid_preprocessing(vid_path):
     return vid_norm, fps
 
 def save_video(vid_target_recon, save_path, fps):
-    vid = vid_target_recon.permute(0, 2, 3, 4, 1)
-    vid = vid.clamp(-1, 1)
-    vid = ((vid - vid.min()) / (vid.max() - vid.min()) * 255).type('torch.ByteTensor').cpu()
+    vid = ((vid_target_recon - vid_target_recon.min()) / (vid_target_recon.max() - vid_target_recon.min()) * 255).type('torch.ByteTensor').cpu()
 
-    torchvision.io.write_video(save_path, vid[0], fps=fps)
+    torchvision.io.write_video(save_path, vid, fps=fps)
 
 def fused_leaky_relu(input, bias, negative_slope=0.2, scale=2 ** 0.5):
     return F.leaky_relu(input + bias, negative_slope) * scale
